@@ -19,3 +19,8 @@ run-analytics-consumer:
 	mvn clean package -pl consumer
 	docker-compose -f docker-compose-analytics-consumer.yaml build
 	docker-compose -f docker-compose-analytics-consumer.yaml up
+
+run-advanced-consumer:
+	mvn clean package -pl consumer
+	docker-compose -f docker-compose-advanced-consumer.yaml build
+	docker-compose -f docker-compose-advanced-consumer.yaml up

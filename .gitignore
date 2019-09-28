@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/*
+consumer/target/
+transporter/target/
+transporter/transporter (1).iml
+Будет удалено consumer/target/
+Будет удалено transporter/target/

@@ -1,38 +1,9 @@
 package com.renarde.wikiflow.consumer
 
-import com.typesafe.scalalogging.LazyLogging
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.from_json
 import org.apache.spark.sql.types._
 
-object StructuredConsumer extends App with LazyLogging {
-  val appName: String = "structured-consumer-example"
-
-  val spark: SparkSession = SparkSession.builder()
-    .appName(appName)
-    .config("spark.driver.memory", "5g")
-    .master("local[2]")
-    .getOrCreate()
-
-  import spark.implicits._
-
-  spark.sparkContext.setLogLevel("WARN")
-
-  logger.info("Initializing Structured consumer")
-
-  val inputStream = spark.readStream
-    .format("kafka")
-    .option("kafka.bootstrap.servers", "kafka:9092")
-    .option("subscribe", "wikiflow-topic")
-    .option("startingOffsets", "earliest")
-    .load()
-
-
-  val preparedDS = inputStream.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").as[(String, String)]
-
-  val rawData = preparedDS.filter($"value".isNotNull)
-
-  val expectedSchema = new StructType()
+object data {
+  val expectedSchema: StructType = new StructType()
     .add(StructField("bot", BooleanType))
     .add(StructField("comment", StringType))
     .add(StructField("id", LongType))
@@ -67,17 +38,4 @@ object StructuredConsumer extends App with LazyLogging {
     .add("type", StringType)
     .add("user", StringType)
     .add("wiki", StringType)
-
-  val parsedData = rawData.select(from_json($"value", expectedSchema).as("data")).select("data.*")
-
-  val consoleOutput = parsedData.writeStream
-    .outputMode("append")
-    .format("console")
-    .start()
-
-
-  spark.streams.awaitAnyTermination()
-
 }
-
-

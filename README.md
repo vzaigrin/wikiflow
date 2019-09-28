@@ -27,7 +27,12 @@ make run-analytics-consumer
 
 You could also access the SparkUI for this Job at http://localhost:4040/jobs
 
+- To run consumer consumed data from output from Analytics Consumer and output to console
+```bash
+make run-advanced-consumer
+```
 
+You could also access the SparkUI for this Job at http://localhost:4041/jobs
 
 ## Known issues
 
